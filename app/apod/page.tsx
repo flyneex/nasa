@@ -27,7 +27,7 @@ const Apod = () => {
 		}
 		fetchData()
 	}, [])
-	if (!data) return <p className='text-center'>Загрузка...</p>
+	if (!data) return <p className='text-center font-bold'>Загрузка...</p>
 	return (
 		<>
 			<div className='flex flex-col justify-center items-center h-screen p-[50px] bg-pink-300'>
