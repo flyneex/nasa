@@ -40,8 +40,8 @@ async function DashboardContent({
 	const start = format(new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000), 'yyyy-MM-dd')
 	const end = format(new Date(), 'yyyy-MM-dd')
 
-	const baseUrl = process.env.BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL ?? 'https://api.nasa.gov'
-	const apiKey = process.env.NASA_KEY ?? process.env.NEXT_PUBLIC_NASA_KEY ?? 'DEMO_KEY'
+	const baseUrl = process.env.BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL
+	const apiKey = process.env.NASA_KEY ?? process.env.NEXT_PUBLIC_NASA_KEY
 
 	let neos: Props[] = []
 	try {
@@ -49,8 +49,10 @@ async function DashboardContent({
 			`${baseUrl}/neo/rest/v1/feed?start_date=${start}&end_date=${end}&api_key=${apiKey}`,
 			{cache: 'no-store'}
 		)
+
 		if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
 		const data: Object = await res.json()
+		console.log(data)
 		neos = Object.values(data.near_earth_objects ?? {}).flat()
 	} catch (error) {
 		console.error('Failed to load NEO feed', error)
