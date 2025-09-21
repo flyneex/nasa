@@ -40,22 +40,45 @@ async function DashboardContent({
 	const start = format(new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000), 'yyyy-MM-dd')
 	const end = format(new Date(), 'yyyy-MM-dd')
 
-	const baseUrl = process.env.BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL
-	const apiKey = process.env.NASA_KEY ?? process.env.NEXT_PUBLIC_NASA_KEY
+	const baseUrl = process.env.BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL ?? 'https://api.nasa.gov'
+	const apiKey = process.env.NASA_KEY ?? process.env.NEXT_PUBLIC_NASA_KEY ?? 'DEMO_KEY'
 
 	let neos: Props[] = []
-	try {
-		const res = await fetch(
-			`${baseUrl}/neo/rest/v1/feed?start_date=${start}&end_date=${end}&api_key=${apiKey}`,
-			{cache: 'no-store'}
-		)
 
-		if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
+	// Отладочная информация
+	console.log('=== NASA API Debug Info ===')
+	console.log('baseUrl:', baseUrl)
+	console.log('apiKey:', apiKey)
+	console.log('start_date:', start)
+	console.log('end_date:', end)
+	console.log('Environment variables check:')
+	console.log('  process.env.BASE_URL:', process.env.BASE_URL)
+	console.log('  process.env.NEXT_PUBLIC_BASE_URL:', process.env.NEXT_PUBLIC_BASE_URL)
+	console.log('  process.env.NASA_KEY:', process.env.NASA_KEY)
+	console.log('  process.env.NEXT_PUBLIC_NASA_KEY:', process.env.NEXT_PUBLIC_NASA_KEY)
+
+	const apiUrl = `${baseUrl}/neo/rest/v1/feed?start_date=${start}&end_date=${end}&api_key=${apiKey}`
+	console.log('API URL:', apiUrl)
+
+	try {
+		const res = await fetch(apiUrl, {cache: 'no-store'})
+
+		console.log('Response status:', res.status)
+		console.log('Response ok:', res.ok)
+
+		if (!res.ok) {
+			const errorText = await res.text()
+			console.error('Error response:', errorText)
+			throw new Error(`Fetch failed: ${res.status} - ${errorText}`)
+		}
+
 		const data: Object = await res.json()
-		console.log(data)
+		console.log('Raw API data:', data)
 		neos = Object.values(data.near_earth_objects ?? {}).flat()
+		console.log('Processed neos array:', neos)
+		console.log('Number of asteroids found:', neos.length)
 	} catch (error) {
-		console.error('Failed to load NEO feed', error)
+		console.error('Failed to load NEO feed:', error)
 		neos = []
 	}
 

@@ -22,6 +22,9 @@ type Props = {
 }
 
 const AsteroidsList = ({neos = []}: {neos?: Props[]}) => {
+	console.log('AsteroidsList received neos:', neos)
+	console.log('AsteroidsList neos length:', neos.length)
+
 	return (
 		<>
 			<div className='p-10 min-h-screen text-white'>

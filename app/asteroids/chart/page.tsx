@@ -25,7 +25,7 @@ type Props = {
 	}[]
 }
 
-export function SimpleChart({neos = []}: {neos?: Props[]}) {
+export default function SimpleChart({neos = []}: {neos?: Props[] | undefined}) {
 	const dangerous = neos.filter(d => d.is_potentially_hazardous_asteroid).length
 	const sentry = neos.filter(s => s.is_sentry_object).length
 	const orbit = neos.filter(n =>
