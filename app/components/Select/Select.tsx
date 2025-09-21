@@ -15,8 +15,10 @@ const SelectFilter = () => {
 	const searchParams = useSearchParams()
 
 	const options = [
+		{value: 'all', label: 'All Asteroids'},
 		{value: 'dangerous', label: 'Dangerous'},
 		{value: 'sentry', label: 'Sentry'},
+		{value: 'orbit', label: 'Orbit Earth'},
 	]
 
 	const CustomStyles = {
